@@ -1,0 +1,17 @@
+# install required packages
+PKG mysql80-server phpMyAdmin5-php82
+
+# copy files
+CP usr /
+
+# enable and start mariadb
+SYSRC mysql_enable=YES
+SYSRC mysql_args="--bind-address=127.0.0.1"
+SERVICE mysql-server start
+
+# harden mariadb
+CMD mysql -u root -e "DELETE FROM mysql.user WHERE User=''"
+CMD mysql -u root -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"
+CMD mysql -u root -e "DROP DATABASE IF EXISTS test"
+CMD mysql -u root -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+CMD mysql -u root -e "FLUSH PRIVILEGES"
