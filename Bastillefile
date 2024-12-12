@@ -1,5 +1,5 @@
 # install required packages
-PKG mysql80-server phpMyAdmin5-php82
+PKG mysql80-server
 
 # copy files
 CP usr /
@@ -10,13 +10,6 @@ SYSRC mysql_args="--bind-address=127.0.0.1"
 SERVICE mysql-server start
 
 # harden mysql
-CMD mysql -u root -e "CREATE database phpmyadmin"
-CMD mysql -u root -e "CREATE user pma@'localhost' identified by 'pmapass'"
-CMD mysql -u root -e "GRANT ALL PRIVILEGES on phpmyadmin.* to pma@'localhost'"
-CMD cd /usr/local/www/phpMyAdmin/sql && mysql < create_tables.sql
-CMD chown -R www:www /usr/local/www/phpMyAdmin
-SERVICE php-fpm reload
-SERVICE apache24 reload
 CMD mysql -u root -e "DELETE FROM mysql.user WHERE User=''"
 CMD mysql -u root -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"
 CMD mysql -u root -e "DROP DATABASE IF EXISTS test"
