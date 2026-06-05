@@ -1,5 +1,19 @@
+# --- Variable ---
+ARG CPULIMIT="0,1"
+ARG MEMLIMIT="2048M"
+ARG DISKLIMIT="4G"
+
+ARG MY_VERSION="80"
+ARG MY_PORT="3306"
+
+# --- Limit resource ---
+
+LIMITS cpu ${CPULIMIT}
+LIMITS memoryuse ${MEMLIMIT}
+LIMITS datasize 20G ${DISKLIMIT}
+
 # install required packages
-PKG mysql80-server
+PKG mysql${MY_VERSION}-server
 
 # copy files
 CP usr /
@@ -15,3 +29,7 @@ CMD mysql -u root -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN (
 CMD mysql -u root -e "DROP DATABASE IF EXISTS test"
 CMD mysql -u root -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 CMD mysql -u root -e "FLUSH PRIVILEGES"
+
+#RDR tcp ${MY_PORT} 3306
+
+TAGS database mysql v${MY_VERSION}
